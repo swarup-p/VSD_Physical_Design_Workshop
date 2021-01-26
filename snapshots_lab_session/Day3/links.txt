@@ -1,0 +1,4 @@
+https://github.com/nickson-jose/vsdstdcelldesign
+https://skywater-pdk--136.org.readthedocs.build/en/136/
+https://github.com/google/skywater-pdk
+http://opencircuitdesign.com/open_pdks/archive/drc_tests.tgz
