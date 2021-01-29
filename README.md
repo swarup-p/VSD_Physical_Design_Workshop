@@ -45,6 +45,16 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#cell-characterization-flow">Cell Characterization Flow</a></li>
       </ul>
     </li>
+	<li>
+      <a href="#day-3-spice-simulation">Day 3 SPICE Simulation</a>
+      <ul>
+        <li><a href="#features-of-openlane-flow">Features of OpenLane Flow</a></li>
+		<li><a href="#CMOS Process">CMOS Process</a></li>
+		<li><a href="#spice-deck">SPICE Deck</a></li>
+		<li><a href="#extract-spice-file-from-layout">Extract SPICE File from Layout</a></li>
+		<li><a href="#example-of-spice-simulation">Example of SPICE Simulation</a></li>
+      </ul>
+    </li>
 	<li><a href="#references">References</a></li>
   </ol>
 </details>
@@ -303,6 +313,146 @@ Here are the typical steps involved in cell characterization,
   8. Simulation command
   9. Feed the results to GUNA (tool)
   10. Output of GUNA is in terms of timing, noise,power.lib functions
+
+<!-- Day 3 SPICE Simulation -->
+
+### Features of OpenLane Flow
+
+In OpenLane flow, if needed, user is able to change certain flow parameters on the fly. The details of parameters which can be varied during the flow are listed in READ_ME.md file in the configuration folder. 
+
+Command to check existing value of a parameter,
+
+	echo $::env(`parameter_name`)
+	
+Command to set a value of a parameter,
+
+	set ::env(`parameter_name`)
+	
+### CMOS Process
+
+A manufacturing process to get final CMOS involves 16 masks. Steps to manufacture a CMOS are,
+  
+  1. Select a substrate
+    substrate doping level should be less that well doping level
+	
+  2. Create active region for transistor
+  
+  3. N-well and P-well formation
+    includes drive-in diffussion and twin tub formation process
+	
+  4. Formation of Gate
+    - form P implant inside P-well
+	- form N implant inside N-well
+	- deposit polysilicon layer
+	- dope polysilicon layer with N impurities to have a low sheet resistance
+	- remove polysilicon layer in the areas expect gate region
+	
+  5. Lightly doped drain formation
+    - N impurities to form N- implant inside P-well (N- -> indicates light doping)
+	- P impurities to form P- implant inside N-well (P- -> indicates light doping)
+	
+  6. Source and Drain formation
+    - form N+ implant in P-well to get source and drain
+	- form P+ implant in N-well to get source and drain
+
+  7. Form contacts and local interconnects
+  
+  8. Higher level metal interconnect formation
+  
+	Note: As process moves from bottom to top, the thickness of metal interconnects increases.
+	
+### SPICE Deck
+
+SPICE deck is a set of commands that includes,
+  - Connectivity information
+  - Input and output node information
+  - VDD and VSS tap information
+  - Commands to analyse a circuit
+  - Library information
+
+Once the SPICE deck file (.spice extension) is ready, here is the command format to run simulation process,
+	
+	nspice `name_of_the_spice_deck_file`
+	
+If an example of a CMOS Inveerter is considered then CMOS robustness can be defined with SPICE simulation by determinig parameters such as
+  - Switching Threshold (Vm)
+  - Rise time and Fall time
+
+### Extract SPICE File from Layout
+
+Here is an example of how to extract SPICE file from Inverter layout in magic tool. Command to open layout file (.mag file extension) in magic,
+	
+	magic -T `path_to_tech_file` 'path_to_mag_file` &
+	
+![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view.JPG)
+
+Inveter cell view in magic tool,
+
+![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view1.JPG)
+
+  - Go to tkcon terminal and enter below commands without quotes
+  - enter command, 'extract all' (gives .ext file in the same directory)
+  - enter command, 'ext2spice cthresh 0 rthesh 0' (this is to extract parasitics)
+  - enter command, 'ext2spice' (should give .spice file in the same directory)
+
+![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract1.JPG)
+
+![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract2.JPG)
+
+![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract4.JPG)
+
+### Example of SPICE Simulation
+
+Here is the example of transient response to characterize the Inverter cell in above-mentioned steps,
+
+Modify the extracted SPICE file so that SPICE deck has,
+  - right scaling value
+  - scaling value should be according to grid size of the layout
+    - grid size of the layout can be checked in the tkcon window
+  - MOS model names should be as mentioned in the library
+  - specify power supply and ground in the design
+  - specify pulse input signal
+  - include a command to perform transient analysis
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_spice_deck_example.JPG)
+
+Run a spice file with ngspice tool,
+
+![](/snapshots_lab_session/Day3/D3_lab_ngspice_inv_run.JPG)
+
+Plot transient response out of SPICE simulation using this command format,
+	
+	plot `output_node` vs time `input_node`
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_transient_response.JPG)
+
+Calculate rise time, fall time and propagation delay from transient response,
+
+Output Rise Time: 0.04218 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_out_rise_time.JPG)
+
+Output Fall Time: 0.02754 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_out_rise_time.JPG)
+
+Input Rise Time: 0.05997 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_in_rise_time.JPG)
+
+Input Fall Time: 0.05988 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_in_fall_time.JPG)
+
+Propagation delay when output is rising: 0.0335 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_propagation_out_rise.JPG)
+
+Propagation dealay when output is falling: 0.00412 nsec
+
+![](/snapshots_lab_session/Day3/D3_lab_inv_propagation_out_fall.JPG)
+
+
 
 <!-- References --> 
 ## References
