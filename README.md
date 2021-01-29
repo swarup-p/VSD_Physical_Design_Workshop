@@ -37,40 +37,60 @@ RTL to GDSII is a process to convert behavioural logic written in high level lan
 
 Here are the basic steps invoved in the process to realize functional ASIC,
 
-	1. Chip Specification: Architecture, functionalities and specifications of the ASIC are defined at this stage.
+	1. Chip Specification: 
 	
-	2. Design Entry / Functional Verification: The functional and logical behaviour of the circuit is confirmed by a simulation of the RTL code.
+	Architecture, functionalities and specifications of the ASIC are defined at this stage.
 	
-	3. RTL block synthesis: The RTL code is converted into gate-level netlist using a logical synthesis tool that meets required time contraints.
+	2. Design Entry / Functional Verification:
+
+	The functional and logical behaviour of the circuit is confirmed by a simulation of the RTL code.
 	
-	4. Chip Partitioning: ASIC design is partiioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
+	3. RTL block synthesis:
+
+	The RTL code is converted into gate-level netlist using a logical synthesis tool that meets required time contraints.
 	
-	5. Design For Test (DFT) Insertion: To figure out faults in the chip at early development stages high quality test techniques are introduced.
+	4. Chip Partitioning:
+
+	ASIC design is partiioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
 	
-	6. Floor Planning (blueprint of a chip): Physical implementation starts at this stage. Objective of the floorplan is to plan silicon area and robsut power distribution network to power whole chip.
+	5. Design For Test (DFT) Insertion:
+
+	To figure out faults in the chip at early development stages high quality test techniques are introduced.
 	
-	7. Placement: It involves placement of standard cells on the rows formed in floorplan.
+	6. Floor Planning (blueprint of a chip):
+
+	Physical implementation starts at this stage. Objective of the floorplan is to plan silicon area and robsut power distribution network to power whole chip.
 	
-	8. Clock Tree Synthesis (CTS): Create a clock distribution network to deliver clock to all sequential elements in required time, area and with low power consumption.
+	7. Placement:
+
+	It involves placement of standard cells on the rows formed in floorplan.
 	
-	9. Routing: Find optimised ways to interconnect metal layers with valid patterns, here specifications defined in PDK such as minimum width, via spacing are used to inteconnect metal layers.
+	8. Clock Tree Synthesis (CTS):
+
+	Create a clock distribution network to deliver clock to all sequential elements in required time, area and with low power consumption.
 	
-	10. Sign Off: Routed layers undergo physical verification known as signoff checks to avoid any errors just before tapeout.
+	9. Routing:
+
+	Find optimised ways to interconnect metal layers with valid patterns, here specifications defined in PDK such as minimum width, via spacing are used to inteconnect metal layers.
 	
-Please refer to: https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
+	10. Sign Off:
+
+	Routed layers undergo physical verification known as signoff checks to avoid any errors just before tapeout.
+	
+Please refer to,	https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
 
 <!-- Google-Skywater's PDK and OpenLANE -->
 ## Google-Skywater's PDK and OpenLANE
 
-###Google-Skywater's PDK
+### Google-Skywater's PDK
 
 Google and Skywater Technology Foundry have partnered to release first ever manufacturable open source 130nm process design kit(pdk). PDK is a collection of files that includes process design rules, behavioral models, analog designs, digital designs, support IPs and extracted data. PDK is in an interface between VLSI engineers and foundry. This particular PDK uses "SKY130" (130 nm) process node which supports 1 level of local interconnect and 5 levels of metals, and is capable of having inductors, has high sheet rho poly resistors, optional MiM capacitors and also includes SONOS shrunken cell.
 
 Please refer to video link below,
 
-https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
+	https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
 
-###OpenLANE
+### OpenLANE
 
 OpenLANE is ASIC design flow which is built on open source EDA tools. It is aimed to produce a clean GDSII with no human intervation to give a true tape-out experience to VLSI engineers. OpenLane flow is tuned to work with Skywater 130nm open PDK. 
 
@@ -80,18 +100,18 @@ Here is a diagram that shows fully automated RTL to GDSII flow in OpenLane,
 
 Please refer to this video for detailed description on OpenLane flow,
 
-https://www.youtube.com/watch?v=Vhyv0eq_mLU
+	https://www.youtube.com/watch?v=Vhyv0eq_mLU
 
 As this is an open source flow, it is available on github. Please check the links below for more information and installation instructions.
 
-	- https://github.com/efabless/openlane
+	https://github.com/efabless/openlane
 	
-	- https://github.com/nickson-jose/openlane_build_script 
+	https://github.com/nickson-jose/openlane_build_script 
 
 
 <!-- References --> 
 ## References
-	1.https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
+	1.  https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
 	
 	2. https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
 	
@@ -100,5 +120,4 @@ As this is an open source flow, it is available on github. Please check the link
 	4. https://github.com/efabless/openlane
 	
 	5. https://github.com/nickson-jose/openlane_build_script
-	
 	
