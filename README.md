@@ -26,6 +26,22 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#instruction-to-install-openlane">Instruction to install OpenLANE</a></li>
       </ul>
     </li>
+	<li>
+      <a href="#day-1-how-to-run-openlane-flow">Day 1 How to Run OpenLane Flow</a>
+      <ul>
+        <li><a href="#interactive-openlane-flow">Interactive OpenLane Flow</a></li>
+        <li><a href="#design-setup-stage">Design Setup Stage</a></li>
+        <li><a href="#synthesis">Synthesis</a></li>
+      </ul>
+    </li>
+		<li>
+      <a href="#day-2-floorplan-and-placement">Day 2 Floorplan and Placement</a>
+      <ul>
+        <li><a href="#interactive-openlane-flow">Interactive OpenLane Flow</a></li>
+        <li><a href="#design-setup-stage">Design Setup Stage</a></li>
+        <li><a href="#synthesis">Synthesis</a></li>
+      </ul>
+    </li>
 	<li><a href="#references">References</a></li>
   </ol>
 </details>
@@ -33,7 +49,9 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 <!-- Abstract -->
 ## Abstract
 
-Physical design is a process in VLSI in which a structured netlist from front end RTL design team is transformed into high-quality placement and routing by back-end design team to convert into geometrical design information of all physical layers which is used to tape-out chips. ASIC design flow brings challenges and surprises at every step of the design cycle. The steps involved in IC physical design process and the tools to overcome the challenges faced in this process, from a RTL netlist to final tape-out, are introduced during a workshop. A hands-on in the physical design and the characterization of a standard cell built on Google-Skywater's open source 130nm process design kit with the help of Openlane flow, a fully-automated RTL to GDSII flow is one of the highlights of the workshop.
+Physical design is a process in VLSI in which a structured netlist from front end RTL design team is transformed into high-quality placement and routing by back-end design team to convert into geometrical design information of all physical layers which is used to tape-out chips.
+
+ASIC design flow brings challenges and surprises at every step of the design cycle. The steps involved in IC physical design process and the tools to overcome the challenges faced in this process, from a RTL netlist to final tape-out, are introduced during a workshop. A hands-on in the physical design and the characterization of a standard cell built on Google-Skywater's open source 130nm process design kit with the help of Openlane flow, a fully-automated RTL to GDSII flow is one of the highlights of the workshop.
 
 <!-- RTL to GDSII Flow -->
 ## RTL to GDSII Flow
@@ -44,35 +62,35 @@ Whereas GDSII (Graphical Data Stream Information Interchange) file is a final ou
 
 Here are the basic steps invoved in the process to realize functional ASIC,
 
-	1. Chip Specification:
-	Architecture, functionalities and specifications of the ASIC are defined at this stage.
+  1. Chip Specification: 
+  Architecture, functionalities and specifications of the ASIC are defined at this stage.
 	
-	2. Design Entry / Functional Verification:
-	The functional and logical behaviour of the circuit is confirmed by a simulation of the RTL code.
+  2. Design Entry / Functional Verification: 
+  The functional and logical behaviour of the circuit is confirmed by a simulation of the RTL code.
 	
-	3. RTL block synthesis:
-	The RTL code is converted into gate-level netlist using a logical synthesis tool that meets required time contraints.
+  3. RTL block synthesis: 
+  The RTL code is converted into gate-level netlist using a logical synthesis tool that meets required time contraints.
 	
-	4. Chip Partitioning:
-	ASIC design is partiioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
+  4. Chip Partitioning: 
+  ASIC design is partiioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
 	
-	5. Design For Test (DFT) Insertion:
-	To figure out faults in the chip at early development stages high quality test techniques are introduced.
+  5. Design For Test (DFT) Insertion: 
+  To figure out faults in the chip at early development stages high quality test techniques are introduced.
 	
-	6. Floor Planning (blueprint of a chip):
-	Physical implementation starts at this stage. Objective of the floorplan is to plan silicon area and robsut power distribution network to power whole chip.
+  6. Floor Planning (blueprint of a chip): 
+  Physical implementation starts at this stage. Objective of the floorplan is to plan silicon area and robsut power distribution network to power whole chip.
 	
-	7. Placement:
-	It involves placement of standard cells on the rows formed in floorplan.
+  7. Placement: 
+  It involves placement of standard cells on the rows formed in floorplan.
 	
-	8. Clock Tree Synthesis (CTS):
-	Create a clock distribution network to deliver clock to all sequential elements in required time, area and with low power consumption.
+  8. Clock Tree Synthesis (CTS): 
+  Create a clock distribution network to deliver clock to all sequential elements in required time, area and with low power consumption.
 	
-	9. Routing:
-	Find optimised ways to interconnect metal layers with valid patterns, here specifications defined in PDK such as minimum width, via spacing are used to inteconnect metal layers.
+  9. Routing: 
+  Find optimised ways to interconnect metal layers with valid patterns, here specifications defined in PDK such as minimum width, via spacing are used to inteconnect metal layers.
 	
-	10. Sign Off:
-	Routed layers undergo physical verification known as signoff checks to avoid any errors just before tapeout.
+  10. Sign Off: 
+  Routed layers undergo physical verification known as signoff checks to avoid any errors just before tapeout.
 	
 Please refer to link below to understand complete ASIC flow,
 	https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
@@ -85,7 +103,6 @@ Please refer to link below to understand complete ASIC flow,
 Google and Skywater Technology Foundry have partnered to release first ever manufacturable open source 130nm process design kit(pdk). PDK is a collection of files that includes process design rules, behavioral models, analog designs, digital designs, support IPs and extracted data. PDK is in an interface between VLSI engineers and foundry. This particular PDK uses "SKY130" (130 nm) process node which supports 1 level of local interconnect and 5 levels of metals, and is capable of having inductors, has high sheet rho poly resistors, optional MiM capacitors and also includes SONOS shrunken cell.
 
 Please refer to video link below,
-
 	https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
 
 ### OpenLANE
@@ -102,8 +119,49 @@ Please refer to this video for detailed description on OpenLane flow,
 ### Instruction to install OpenLANE
 
 As this is an open source flow, it is available on github. Please check the links below for more information and installation instructions.
+
 	https://github.com/efabless/openlane
+	
 	https://github.com/nickson-jose/openlane_build_script 
+
+<!-- Day 1 How to Run OpenLane Flow -->
+## Day 1 How to Run OpenLane Flow
+
+### Interactive OpenLane Flow
+
+OpenLANE flow consists of several stages. It can be used in either interactive mode or autonomous mode. Command to use openlane flow in interactive mode,
+
+	./flow.tcl -interactive
+	
+OpenLane has lots of software dependencies and to load these dependencies, use command,
+
+	package require openlane 0.9
+
+![](/snapshots_lab_session/D1_lab_invoke_openlane.JPG)
+
+### Design Setup Stage
+
+Now, to initiate design setup stage which creates directory structure for the runs, use command,
+
+	prep -design `name_of_the_design_folder`
+
+![](/snapshots_lab_session/D1_lab_design_setup_stage1.JPG.JPG)
+
+Design setup stage uses configuration file that contains parameters to prepare a run, a path to this configuration file is also shown here.
+	
+### Synthesis
+
+Synthesis step internally performs RTL synthesis (tool -> yosys), performs technology mapping (tool -> abc) and performs static timing analysis on the generated netlist to produce timing reports (tool -> OpenSTA). Use command,
+
+	run_synthesis
+
+![](/snapshots_lab_session/D1_lab_synthesis0.JPG)
+
+Example of printed statistics,
+![](/snapshots_lab_session/D1_lab_flop_ratio.JPG)
+![](/snapshots_lab_session/D1_lab_synthesis1.JPG)
+
+Properties like flop ratios, buffer ratios and timing information can be evaluated using the statistic printed during synthesis run.
 
 
 <!-- References --> 
