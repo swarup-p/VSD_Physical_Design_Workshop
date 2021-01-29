@@ -23,7 +23,7 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 	  <ul>
         <li><a href="#google-skywater's-pdk">Google-Skywater's PDK</a></li>
         <li><a href="#openlane">OpenLANE</a></li>
-		<li><a href="#instruction-to-install-openlane">Instruction to install OpenLANE</a></li>
+		<li><a href="#instructions-to-install-openlane">Instructions to install OpenLANE</a></li>
       </ul>
     </li>
 	<li>
@@ -37,9 +37,11 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li>
       <a href="#day-2-floorplan-and-placement">Day 2 Floorplan and Placement</a>
       <ul>
-        <li><a href="#interactive-openlane-flow">Interactive OpenLane Flow</a></li>
-        <li><a href="#design-setup-stage">Design Setup Stage</a></li>
-        <li><a href="#synthesis">Synthesis</a></li>
+        <li><a href="#steps-in-floorplanning">Steps in Flooplanning</a></li>
+		<li><a href="#floorplan">Floorplan</a></li>
+		<li><a href="#steps-in-placement">Steps in Placement</a></li>
+		<li><a href="#placement">Placement</a></li>
+		<li><a href="#cell-design-flow">Cell Design Flow</a></li>
       </ul>
     </li>
 	<li><a href="#references">References</a></li>
@@ -109,14 +111,14 @@ Please refer to video link below,
 
 OpenLANE is a ASIC design flow which is built on open source EDA tools. It is aimed to produce a clean GDSII with no human intervation to give a true tape-out experience to VLSI engineers. OpenLane flow is tuned to work with Skywater 130nm open PDK. 
 
-Here is a diagram that shows fully automated RTL to GDSII flow in OpenLane and open ource EDA tools used in each design step,
+Here is a diagram that shows fully automated RTL to GDSII flow in OpenLane and the open ource EDA tools used in each design step,
 
 ![](/snapshots_lab_session/OpenLANE_flow.JPG)
 
 Please refer to this video for detailed description on OpenLane flow,
 	https://www.youtube.com/watch?v=Vhyv0eq_mLU
 
-### Instruction to install OpenLANE
+### Instructions to install OpenLANE
 
 As this is an open source flow, it is available on github. Please check the links below for more information and installation instructions.
 
@@ -137,7 +139,7 @@ OpenLane has lots of software dependencies and to load these dependencies, use c
 
 	package require openlane 0.9
 
-![](/snapshots_lab_session/D1_lab_invoke_openlane.JPG)
+![](/snapshots_lab_session/Day1/D1_lab_invoke_openlane.JPG)
 
 ### Design Setup Stage
 
@@ -145,7 +147,7 @@ Now, to initiate design setup stage which creates directory structure for the ru
 
 	prep -design `name_of_the_design_folder`
 
-![](/snapshots_lab_session/D1_lab_design_setup_stage1.JPG.JPG)
+![](/snapshots_lab_session/Day1/D1_lab_design_setup_stage1.JPG.JPG)
 
 Design setup stage uses configuration file that contains parameters to prepare a run, a path to this configuration file is also shown here.
 	
@@ -155,14 +157,150 @@ Synthesis step internally performs RTL synthesis (tool -> yosys), performs techn
 
 	run_synthesis
 
-![](/snapshots_lab_session/D1_lab_synthesis0.JPG)
+![](/snapshots_lab_session/Day1/D1_lab_synthesis0.JPG)
 
 Example of printed statistics,
-![](/snapshots_lab_session/D1_lab_flop_ratio.JPG)
-![](/snapshots_lab_session/D1_lab_synthesis1.JPG)
+![](/snapshots_lab_session/Day1/D1_lab_flop_ratio.JPG)
+
+![](/snapshots_lab_session/Day1/D1_lab_synthesis1.JPG)
 
 Properties like flop ratios, buffer ratios and timing information can be evaluated using the statistic printed during synthesis run.
 
+<!-- Day 2 Floorplan and Placement -->
+## Day 2 Floorplan and Placement
+
+### Steps in Flooplanning
+
+Typical steps involved in floorplanning are,
+  
+  1. Calculate Utilization factor and Aspect Ratio of the Core 
+  Utilization factor is a ratio of area occupied by the netlist to the total area of the core. Utilization factor of 50% - 75% ensures enough room to optimise during routing stage. Whereas aspect ratio is a ratio of height of the core to width of the core. It defines the shape of the core, for example, aspect ratio value 1 means core is in square shape.
+  
+  2. Define location of preplaced cells
+  Memory, comparator, MUXs are examples of the preplaced cells. These blocks or cells are usually designed once and then used at multiple instances in the design. The location of such IPs or blocks is defined and placed on the chip before automated placement and route stage, therefore, named as preplaced cells.
+  
+  3. Place decoupling capacitors 
+  Long wire paths could have voltage drop along the line and severely affect power supplied to the preplaced cells. Large decoupling capacitors are placed as close as possible to the preplaced cells to decouple them from the power supply and avoid problems of the voltage drop along the line.
+  
+  4. Power planning
+  At times, power drawn or sinked at the source could lead to variations in supplied voltage, either voltage drop or ground bounce effect. These variations could drive design operation to fault state or indeterinate state. To avoid this problem, well distributed power network with many power straps is planned.
+  A parallel structure of metal straps is ussed to network VDD and VSS on the chip. Parallel structure ensures low resistance and also addresses elctro migration problem.
+  
+  5. Pin placement  
+  It is necessary to carefully plan pin locations because optimal pin placement could result into low power consumpption and improved timing delays.
+  
+  6. Logical cell placement blockage
+
+### Floorplan
+  
+To run floorplan step in OpenLane flow, use command,
+
+	run_floorplan
+	
+![](/snapshots_lab_session/Day2/D2_lab_run_floorplan.JPG)
+
+The results of floorplan can be viewed in magic tool, here is command structure,
+	
+	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_floorplan_def_file` &
+	
+	Note: Ampersand sign at the end of the command frees the command console.
+
+![](/snapshots_lab_session/Day2/D2_lab_invoke_magic_floorplan.JPG)
+
+Floorplan viewed in magic tool,
+
+![](/snapshots_lab_session/Day2/D2_lab_floorplan_view.JPG)
+
+Zoom in on the floorplan and it can be noticed that the standard cells that arre yet to be placed are accumulated at the bottom.
+
+![](/snapshots_lab_session/Day2/D2_lab_magic_stdcell.JPG)
+	
+	Note: Tap cells seen here are used to prevent latch up in CMOS, it connects N-build to VDD and substrate to GND to prevent latch up.
+
+### Steps in Placement
+
+Typical steps involved in placement are,
+
+  1. Bind netlist with physical cells
+  Library contains information about physical cells such as delay information, timeing delays. Usually,library gives option to choose a standard cell among its variants with different shapes, sizes, operating voltage. 
+  
+	Note: Larger ahspes allows cell to have low resistance and that makes it faster, but then it requires more area. Also, bigger cells have more drive strength compared to their smaller variants.
+	
+  2. Placement
+  Placement happpens at this step.
+  
+  3. Optimize placement
+  In this step, wire length and capacitances are estimated and bsed on that repeater are inserted. Repeaters are basically buffers and used in the design to maintain signal integrity.
+  
+	Note: Repeaters used on clock lines are different from the repeater that are used in data paths.
+	
+### Placement
+
+To run placement stage in OpenLane flow, use command,
+	
+	run_placement
+	
+![](/snapshots_lab_session/Day2/D2_lab_run_placcement.JPG)
+
+![](/snapshots_lab_session/Day2/D2_lab_run_placcement1.JPG)
+
+	Note: Keep an eye on the overflow flag in the statistics shown on the screen. As iterations increases the overflow flag value should drop near to zero because this ensures that design placemnt converges with time.
+
+![](/snapshots_lab_session/Day2/D2_lab_run_placcement2.JPG)
+
+In the end check the legality results and ensure that all steps are okay.
+
+Similar to floorplan, results of placement stage can be view in magic tool. Here is the command structure for it,
+	
+	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_placement_def_file` `ampersand sign`
+
+![](/snapshots_lab_session/Day2/D2_lab_invoke_magic_placement.JPG)
+
+Here is the example of placement results in magic tool,
+
+![](/snapshots_lab_session/Day2/D2_lab_placement_view.JPG)
+
+### Cell Design Flow
+
+Cell design flow consists of three steps,
+
+  1. Input
+  - process design kit (PDK)
+  - DRC and LVS rules
+	for example, foundry specifies lambda-based rules in tech files. (lambda = L/2 , L -> minimum feature size)
+  - SPICE models
+  - Library and user-defined specifications
+  
+  2. Design steps
+  - Implement functional
+  - Model MOS transistors such that they adhere to library specificationss
+  - Layout design
+    - derive PMOS and NMOS network graph
+	- obtain Eueler's path
+	- get stick diagram
+	- convert stick diagram into layout but ensure that it does not violates library rules.
+  - Characterization
+    - Extract parasitics from layout and characterise in terms of time delay
+	
+  3. Output
+  - CDL (circuit description lannguage)
+  - GDSII, LEF, extracted SPICE netlist
+  - Timing, noise, power.lib functions
+  
+### Cell Characterization Flow
+
+Here are the typical steps involved in cell characterization,
+  
+  1. Read model files of MOS from foundry
+  2. Read extracted SPICE netlist
+  3. Define/ recofnise buffer behaviour
+  4. Read subcircuits in the design
+  5. Connect necessary power supplies
+  6. Apply stimulus
+  7. Add necessary output load capacitance
+  8. Simulation command
+  9. Feed the results to GUNA (tool)
+  10. Output of GUNA is in terms of timing, noise,power.lib functions
 
 <!-- References --> 
 ## References
