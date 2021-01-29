@@ -42,6 +42,7 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#steps-in-placement">Steps in Placement</a></li>
 		<li><a href="#placement">Placement</a></li>
 		<li><a href="#cell-design-flow">Cell Design Flow</a></li>
+		<li><a href="#cell-characterization-flow">Cell Characterization Flow</a></li>
       </ul>
     </li>
 	<li><a href="#references">References</a></li>
@@ -135,7 +136,7 @@ OpenLANE flow consists of several stages. It can be used in either interactive m
 
 	./flow.tcl -interactive
 	
-OpenLane has lots of software dependencies and to load these dependencies, use command,
+to load software dependencies of the OpenLane, use command,
 
 	package require openlane 0.9
 
@@ -147,7 +148,7 @@ Now, to initiate design setup stage which creates directory structure for the ru
 
 	prep -design `name_of_the_design_folder`
 
-![](/snapshots_lab_session/Day1/D1_lab_design_setup_stage1.JPG.JPG)
+![](/snapshots_lab_session/Day1/D1_lab_design_setup_stage1.JPG)
 
 Design setup stage uses configuration file that contains parameters to prepare a run, a path to this configuration file is also shown here.
 	
@@ -160,6 +161,7 @@ Synthesis step internally performs RTL synthesis (tool -> yosys), performs techn
 ![](/snapshots_lab_session/Day1/D1_lab_synthesis0.JPG)
 
 Example of printed statistics,
+
 ![](/snapshots_lab_session/Day1/D1_lab_flop_ratio.JPG)
 
 ![](/snapshots_lab_session/Day1/D1_lab_synthesis1.JPG)
@@ -173,20 +175,20 @@ Properties like flop ratios, buffer ratios and timing information can be evaluat
 
 Typical steps involved in floorplanning are,
   
-  1. Calculate Utilization factor and Aspect Ratio of the Core 
+  1. Calculate Utilization factor and Aspect Ratio of the Core:
   Utilization factor is a ratio of area occupied by the netlist to the total area of the core. Utilization factor of 50% - 75% ensures enough room to optimise during routing stage. Whereas aspect ratio is a ratio of height of the core to width of the core. It defines the shape of the core, for example, aspect ratio value 1 means core is in square shape.
   
-  2. Define location of preplaced cells
+  2. Define location of preplaced cells: 
   Memory, comparator, MUXs are examples of the preplaced cells. These blocks or cells are usually designed once and then used at multiple instances in the design. The location of such IPs or blocks is defined and placed on the chip before automated placement and route stage, therefore, named as preplaced cells.
   
-  3. Place decoupling capacitors 
+  3. Place decoupling capacitors: 
   Long wire paths could have voltage drop along the line and severely affect power supplied to the preplaced cells. Large decoupling capacitors are placed as close as possible to the preplaced cells to decouple them from the power supply and avoid problems of the voltage drop along the line.
   
-  4. Power planning
+  4. Power planning: 
   At times, power drawn or sinked at the source could lead to variations in supplied voltage, either voltage drop or ground bounce effect. These variations could drive design operation to fault state or indeterinate state. To avoid this problem, well distributed power network with many power straps is planned.
   A parallel structure of metal straps is ussed to network VDD and VSS on the chip. Parallel structure ensures low resistance and also addresses elctro migration problem.
   
-  5. Pin placement  
+  5. Pin placement: 
   It is necessary to carefully plan pin locations because optimal pin placement could result into low power consumpption and improved timing delays.
   
   6. Logical cell placement blockage
@@ -221,15 +223,15 @@ Zoom in on the floorplan and it can be noticed that the standard cells that arre
 
 Typical steps involved in placement are,
 
-  1. Bind netlist with physical cells
+  1. Bind netlist with physical cells: 
   Library contains information about physical cells such as delay information, timeing delays. Usually,library gives option to choose a standard cell among its variants with different shapes, sizes, operating voltage. 
   
-	Note: Larger ahspes allows cell to have low resistance and that makes it faster, but then it requires more area. Also, bigger cells have more drive strength compared to their smaller variants.
+	Note: Larger shape allows cell to have low resistance and that makes it faster, but then it requires more area. Also, bigger cells have more drive strength compared to their smaller variants.
 	
-  2. Placement
-  Placement happpens at this step.
+  2. Placement: 
+  Placement takes place at this step.
   
-  3. Optimize placement
+  3. Optimize placement: 
   In this step, wire length and capacitances are estimated and bsed on that repeater are inserted. Repeaters are basically buffers and used in the design to maintain signal integrity.
   
 	Note: Repeaters used on clock lines are different from the repeater that are used in data paths.
@@ -252,7 +254,7 @@ In the end check the legality results and ensure that all steps are okay.
 
 Similar to floorplan, results of placement stage can be view in magic tool. Here is the command structure for it,
 	
-	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_placement_def_file` `ampersand sign`
+	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_placement_def_file` &
 
 ![](/snapshots_lab_session/Day2/D2_lab_invoke_magic_placement.JPG)
 
