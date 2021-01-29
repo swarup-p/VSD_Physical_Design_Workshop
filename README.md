@@ -75,7 +75,7 @@ Whereas GDSII (Graphical Data Stream Information Interchange) file is a final ou
 
 Here are the basic steps invoved in the process to realize functional ASIC,
 
-  1. Chip Specification: 
+  1. Chip Specification:
   Architecture, functionalities and specifications of the ASIC are defined at this stage.
 	
   2. Design Entry / Functional Verification: 
@@ -223,7 +223,7 @@ Floorplan viewed in magic tool,
 
 ![](/snapshots_lab_session/Day2/D2_lab_floorplan_view.JPG)
 
-Zoom in on the floorplan and it can be noticed that the standard cells that arre yet to be placed are accumulated at the bottom.
+Zoom in on the floorplan and it can be noticed that the standard cells that are yet to be placed are accumulated at the bottom.
 
 ![](/snapshots_lab_session/Day2/D2_lab_magic_stdcell.JPG)
 	
@@ -258,9 +258,9 @@ To run placement stage in OpenLane flow, use command,
 
 	Note: Keep an eye on the overflow flag in the statistics shown on the screen. As iterations increases the overflow flag value should drop near to zero because this ensures that design placemnt converges with time.
 
-![](/snapshots_lab_session/Day2/D2_lab_run_placcement2.JPG)
-
 In the end check the legality results and ensure that all steps are okay.
+
+![](/snapshots_lab_session/Day2/D2_lab_run_placcement2.JPG)
 
 Similar to floorplan, results of placement stage can be view in magic tool. Here is the command structure for it,
 	
@@ -278,19 +278,18 @@ Cell design flow consists of three steps,
 
   1. Input
   - process design kit (PDK)
-  - DRC and LVS rules
-	for example, foundry specifies lambda-based rules in tech files. (lambda = L/2 , L -> minimum feature size)
+  - DRC and LVS rules, for example, foundry specifies lambda-based rules in tech files. (lambda = L/2 , L -> minimum feature size)
   - SPICE models
   - Library and user-defined specifications
   
   2. Design steps
-  - Implement functional
+  - Implement cell function
   - Model MOS transistors such that they adhere to library specificationss
   - Layout design
-    - derive PMOS and NMOS network graph
-	- obtain Eueler's path
-	- get stick diagram
-	- convert stick diagram into layout but ensure that it does not violates library rules.
+    - Derive PMOS and NMOS network graph
+	- Obtain Eueler's path
+	- Get stick diagram
+	- Convert stick diagram into layout but ensure that it does not violates library rules.
   - Characterization
     - Extract parasitics from layout and characterise in terms of time delay
 	
@@ -305,7 +304,7 @@ Here are the typical steps involved in cell characterization,
   
   1. Read model files of MOS from foundry
   2. Read extracted SPICE netlist
-  3. Define/ recofnise buffer behaviour
+  3. Define/ recognise buffer behaviour
   4. Read subcircuits in the design
   5. Connect necessary power supplies
   6. Apply stimulus
@@ -315,6 +314,7 @@ Here are the typical steps involved in cell characterization,
   10. Output of GUNA is in terms of timing, noise,power.lib functions
 
 <!-- Day 3 SPICE Simulation -->
+##Day 3 SPICE Simulation
 
 ### Features of OpenLane Flow
 
@@ -333,27 +333,27 @@ Command to set a value of a parameter,
 A manufacturing process to get final CMOS involves 16 masks. Steps to manufacture a CMOS are,
   
   1. Select a substrate
-    substrate doping level should be less that well doping level
+  - substrate doping level should be less that well doping level
 	
   2. Create active region for transistor
   
   3. N-well and P-well formation
-    includes drive-in diffussion and twin tub formation process
+  - includes drive-in diffussion and twin tub formation process
 	
   4. Formation of Gate
-    - form P implant inside P-well
-	- form N implant inside N-well
-	- deposit polysilicon layer
-	- dope polysilicon layer with N impurities to have a low sheet resistance
-	- remove polysilicon layer in the areas expect gate region
+  - form P implant inside P-well
+  - form N implant inside N-well
+  - deposit polysilicon layer
+  - dope polysilicon layer with N impurities to have a low sheet resistance
+  - remove polysilicon layer in the areas expect gate region
 	
   5. Lightly doped drain formation
-    - N impurities to form N- implant inside P-well (N- -> indicates light doping)
-	- P impurities to form P- implant inside N-well (P- -> indicates light doping)
+  - N impurities to form N- implant inside P-well (N- -> indicates light doping)
+  - P impurities to form P- implant inside N-well (P- -> indicates light doping)
 	
   6. Source and Drain formation
-    - form N+ implant in P-well to get source and drain
-	- form P+ implant in N-well to get source and drain
+  - form N+ implant in P-well to get source and drain
+  - form P+ implant in N-well to get source and drain
 
   7. Form contacts and local interconnects
   
@@ -374,7 +374,7 @@ Once the SPICE deck file (.spice extension) is ready, here is the command format
 	
 	nspice `name_of_the_spice_deck_file`
 	
-If an example of a CMOS Inveerter is considered then CMOS robustness can be defined with SPICE simulation by determinig parameters such as
+If an example of a CMOS Inverter is considered then CMOS robustness can be defined with SPICE simulation by determinig parameters such as
   - Switching Threshold (Vm)
   - Rise time and Fall time
 
@@ -386,9 +386,9 @@ Here is an example of how to extract SPICE file from Inverter layout in magic to
 	
 ![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view.JPG)
 
-Inveter cell view in magic tool,
+Inverter cell view in magic tool,
 
-![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view1.JPG)
+![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view2.JPG)
 
   - Go to tkcon terminal and enter below commands without quotes
   - enter command, 'extract all' (gives .ext file in the same directory)
@@ -397,7 +397,7 @@ Inveter cell view in magic tool,
 
 ![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract1.JPG)
 
-![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract2.JPG)
+![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract3.JPG)
 
 ![](/snapshots_lab_session/Day3/D3_lab_tkcon_spice_extract4.JPG)
 
