@@ -72,7 +72,6 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
       <a href="#day-5-routing-and-spef-extractor">Day 5 Routing and SPEF Extractor</a>
       <ul>
         <li><a href="#Routing">Routing</a></li>
-		<li><a href="#cell-lef-file-extraction">Cell LEF File Extraction</a></li>
 		<li><a href="#generate-power-distribution-network">Generate Power Distribution Network</a></li>
 		<li><a href="#run-routing">Run Routing</a></li>
 		<li><a href="#spef-extractor">SPEF Extractor</a></li>
@@ -88,16 +87,16 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 <!-- Abstract -->
 ## Abstract
 
-Physical design is a process in VLSI in which a structured netlist from front end RTL design team is transformed into high-quality placement and routing by back-end design team to convert into geometrical design information of all physical layers which is used to tape-out chips.
+Physical design is a VLSI process in which a structured netlist from front end RTL design team is transformed into high-quality placement and routing by back-end design team to convert into geometrical design information of all physical layers which is used to tape-out chips.
 
-ASIC design flow brings challenges and surprises at every step of the design cycle. The steps involved in IC physical design process and the tools to overcome the challenges faced in this process, from a RTL netlist to final tape-out, are introduced during a workshop. A hands-on in the physical design and the characterization of a standard cell built on Google-Skywater's open source 130nm process design kit with the help of Openlane flow, a fully-automated RTL to GDSII flow is one of the highlights of the workshop.
+ASIC design flow brings challenges and surprises at every step of the design cycle. The steps involved in IC physical design process and the tools to overcome the challenges faced in this process, from a RTL netlist to final tape-out, are introduced during workshop. A hands-on in the physical design and the characterization of a standard cell built on Google-Skywater's open source 130nm process design kit with the help of Openlane flow (a fully-automated RTL to GDSII flow) is one of the highlights of the workshop.
 
 <!-- RTL to GDSII Flow -->
 ## RTL to GDSII Flow
 
-RTL to GDSII is a process to convert behavioural logic written in high level languages to physical layout. RTL (register transfer level) defines a digital circuit design as a sequence of steps of data flow from one register to other register and logical operations that are performed on this data. Hardware Descriptive languages such as VHDL, Verilog are used to create high-level of representation of a circuit or also known as a netlist from a design at the RTL level.
+RTL to GDSII is a process to convert behavioral logic written in high level languages to physical layout. RTL (register transfer level) defines a digital circuit design as a sequence of steps of data flow from one register to another register and logical operations that are performed on this data. Hardware Descriptive languages such as VHDL, Verilog are used to create high-level of representation of a circuit or also known as a netlist from a design at the RTL level.
 
-Whereas GDSII (Graphical Data Stream Information Interchange) file is a final output of IC design cycle. It is a standard database file format that foundries use to exchange information related to physical layout. It is a binary file format that contains information like geometric shapes of layers, text labels.
+Whereas GDSII (Graphical Data Stream Information Interchange) file is a final output of IC design cycle. It is a standard database file format that foundries use to exchange information related to physical layout. It is a binary file format that contains information like geometric shape of layers, text labels.
 
 Here are the basic steps invoved in the process to realize functional ASIC,
 
@@ -105,13 +104,13 @@ Here are the basic steps invoved in the process to realize functional ASIC,
   Architecture, functionalities and specifications of the ASIC are defined at this stage.
 	
   2. Design Entry / Functional Verification: 
-  The functional and logical behaviour of the circuit is confirmed by a simulation of the RTL code.
+  The functional and logical behavior of the circuit is confirmed by a simulation of the RTL code.
 	
   3. RTL block synthesis: 
   The RTL code is converted into gate-level netlist using a logical synthesis tool that meets required time contraints.
 	
   4. Chip Partitioning: 
-  ASIC design is partiioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
+  ASIC design is partioned into functional block and analysed the feasibility of reusing IPs from previous projects or using third party IPs.
 	
   5. Design For Test (DFT) Insertion: 
   To figure out faults in the chip at early development stages high quality test techniques are introduced.
@@ -139,23 +138,23 @@ Please refer to link to understand complete ASIC flow,
 
 ### Google-Skywater's PDK
 
-Google and Skywater Technology Foundry have partnered to release first ever manufacturable open source 130nm process design kit(pdk). PDK is a collection of files that includes process design rules, behavioral models, analog designs, digital designs, support IPs and extracted data. PDK is in an interface between VLSI engineers and foundry. This particular PDK uses "SKY130" (130 nm) process node which supports 1 level of local interconnect and 5 levels of metals, and is capable of having inductors, has high sheet rho poly resistors, optional MiM capacitors and also includes SONOS shrunken cell.
+Google and Skywater Technology Foundry have partnered to release first ever manufacturable open source 130nm process design kit (pdk). PDK is a collection of files that includes process design rules, behavioral models, analog designs, digital designs, support IPs and extracted data. PDK is an interface between VLSI engineers and foundry. This particular PDK uses "SKY130" (130 nm) process node which supports 1 level of local interconnect and 5 levels of metals, and is capable of having inductors, has high sheet rho poly resistors, optional MiM capacitors and also includes SONOS shrunken cell.
 
-Please refer to video link,
+Please refer video link for more information,
 	https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
 
 ### OpenLANE
 
-OpenLANE is a ASIC design flow which is built on open source EDA tools. It is aimed to produce a clean GDSII with no human intervation to give a true tape-out experience to VLSI engineers. OpenLane flow is tuned to work with Skywater 130nm open PDK. 
+OpenLANE is a ASIC design flow built on the open source EDA tools. It is aimed to produce a clean GDSII with no human intervention to give a true tape-out experience to VLSI engineers. OpenLane flow is tuned to work with Skywater 130nm open source PDK. 
 
-Here is a diagram that shows fully automated RTL to GDSII flow in OpenLane and the open ource EDA tools used in each design step,
+Here is the figure of fully automated RTL to GDSII flow in OpenLane and the open source EDA tools used at each design step,
 
 ![](/snapshots_lab_session/OpenLANE_flow.JPG)
 
 Please refer to this video for detailed description on OpenLane flow,
 	https://www.youtube.com/watch?v=Vhyv0eq_mLU
 
-### Instructions to install OpenLANE
+### Instructions to Install OpenLANE
 
 As this is an open source flow, it is available on github. Please check the links below for more information and installation instructions.
 
@@ -172,7 +171,7 @@ OpenLANE flow consists of several stages. It can be used in either interactive m
 
 	./flow.tcl -interactive
 	
-to load software dependencies of the OpenLane, use command,
+To load software dependencies of the OpenLane, use command,
 
 	package require openlane 0.9
 
@@ -180,13 +179,13 @@ to load software dependencies of the OpenLane, use command,
 
 ### Design Setup Stage
 
-Now, to initiate design setup stage which creates directory structure for the runs, use command,
+To initiate design setup stage which creates directory structure for the runs, use command,
 
 	prep -design `name_of_the_design_folder`
 
 ![](/snapshots_lab_session/Day1/D1_lab_design_setup_stage1.JPG)
 
-Design setup stage uses configuration file that contains parameters to prepare a run, a path to this configuration file is also shown here.
+Design setup stage uses configuration file that contains parameters to prepare a run, path of the configuration file is also shown here.
 	
 ### Synthesis
 
@@ -214,15 +213,15 @@ Typical steps involved in floorplanning are,
   1. Calculate Utilization factor and Aspect Ratio of the Core:
   Utilization factor is a ratio of area occupied by the netlist to the total area of the core. Utilization factor of 50% - 75% ensures enough room to optimise during routing stage. Whereas aspect ratio is a ratio of height of the core to width of the core. It defines the shape of the core, for example, aspect ratio value 1 means core is in square shape.
   
-  2. Define location of preplaced cells: 
-  Memory, comparator, MUXs are examples of the preplaced cells. These blocks or cells are usually designed once and then used at multiple instances in the design. The location of such IPs or blocks is defined and placed on the chip before automated placement and route stage, therefore, named as preplaced cells.
+  2. Define location of pre-placed cells: 
+  Memory, comparator, MUXs are examples of the preplaced cells. These blocks or cells are usually designed once and then used at multiple instances in the design. The location of such IPs or blocks is defined and placed on the chip before the automated placement and route stage, therefore, named as pre-placed cells.
   
   3. Place decoupling capacitors: 
-  Long wire paths could have voltage drop along the line and severely affect power supplied to the preplaced cells. Large decoupling capacitors are placed as close as possible to the preplaced cells to decouple them from the power supply and avoid problems of the voltage drop along the line.
+  Long wire paths could have significant voltage drop along the line and could severely affect power supplied to the pre-placed cells. Large decoupling capacitors are placed as close as possible to the pre-placed cells to decouple them from the power supply and avoid problems of the voltage drop along the line.
   
   4. Power planning: 
   At times, power drawn or sinked at the source could lead to variations in supplied voltage, either voltage drop or ground bounce effect. These variations could drive design operation to fault state or indeterinate state. To avoid this problem, well distributed power network with many power straps is planned.
-  A parallel structure of metal straps is ussed to network VDD and VSS on the chip. Parallel structure ensures low resistance and also addresses elctro migration problem.
+  A parallel structure of metal straps is used to network VDD and VSS on the chip. Parallel structure ensures low resistance and also addresses elctro migration problem.
   
   5. Pin placement: 
   It is necessary to carefully plan pin locations because optimal pin placement could result into low power consumpption and improved timing delays.
@@ -239,9 +238,10 @@ To run floorplan step in OpenLane flow, use command,
 
 The results of floorplan can be viewed in magic tool, here is command structure,
 	
-	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_floorplan_def_file` &
+	magic -T `path_to_tech_file` lef read `path_to_merged_lef_file` def read `path_to_floorplan_def_file` &
 	
-	Note: Ampersand sign at the end of the command frees the command console.
+	Note:
+	Ampersand sign at the end of the command frees the command console.
 
 ![](/snapshots_lab_session/Day2/D2_lab_invoke_magic_floorplan.JPG)
 
@@ -253,24 +253,27 @@ Zoom in on the floorplan and it can be noticed that the standard cells that are 
 
 ![](/snapshots_lab_session/Day2/D2_lab_magic_stdcell.JPG)
 	
-	Note: Tap cells seen here are used to prevent latch up in CMOS, it connects N-build to VDD and substrate to GND to prevent latch up.
+	Note:
+	Tap cells seen here are used to prevent latch up in CMOS, it connects N-build to VDD and substrate to GND to prevent latch up.
 
 ### Steps in Placement
 
 Typical steps involved in placement are,
 
   1. Bind netlist with physical cells: 
-  Library contains information about physical cells such as delay information, timeing delays. Usually,library gives option to choose a standard cell among its variants with different shapes, sizes, operating voltage. 
+  Library contains information about physical cells such as delay information, timing delays. Usually,library gives an option to choose standard cell among its variants with different shapes, sizes, operating voltage. 
   
-	Note: Larger shape allows cell to have low resistance and that makes it faster, but then it requires more area. Also, bigger cells have more drive strength compared to their smaller variants.
+	Note:
+	Larger shape allows cell to have low resistance and that makes it faster, but then it requires more area. Also, bigger cells have more drive strength compared to their smaller variants.
 	
   2. Placement: 
   Placement takes place at this step.
   
   3. Optimize placement: 
-  In this step, wire length and capacitances are estimated and bsed on that repeater are inserted. Repeaters are basically buffers and used in the design to maintain signal integrity.
+  In this step, wire length and capacitances are estimated and based on that repeater are inserted. Repeaters are basically buffers and used in the design to maintain signal integrity.
   
-	Note: Repeaters used on clock lines are different from the repeater that are used in data paths.
+	Note:
+	Repeaters used on clock lines which have equal rise and fall time are different from the repeater that are used in data paths.
 	
 ### Placement
 
@@ -282,7 +285,8 @@ To run placement stage in OpenLane flow, use command,
 
 ![](/snapshots_lab_session/Day2/D2_lab_run_placcement1.JPG)
 
-	Note: Keep an eye on the overflow flag in the statistics shown on the screen. As iterations increases the overflow flag value should drop near to zero because this ensures that design placemnt converges with time.
+	Note:
+	Keep an eye on the overflow flag in the statistics shown on the screen. As iterations increases the overflow flag value should drop near to zero because this ensures that design placemnt converges with time.
 
 In the end check the legality results and ensure that all steps are okay.
 
@@ -290,7 +294,7 @@ In the end check the legality results and ensure that all steps are okay.
 
 Similar to floorplan, results of placement stage can be view in magic tool. Here is the command structure for it,
 	
-	magic -T `path_to_tech_file` lef red `path_to_merged_lef_file` def read `path_to_placement_def_file` &
+	magic -T `path_to_tech_file` lef read `path_to_merged_lef_file` def read `path_to_placement_def_file` &
 
 ![](/snapshots_lab_session/Day2/D2_lab_invoke_magic_placement.JPG)
 
@@ -315,22 +319,22 @@ Cell design flow consists of three steps,
     - Derive PMOS and NMOS network graph
 	- Obtain Eueler's path
 	- Get stick diagram
-	- Convert stick diagram into layout but ensure that it does not violates library rules.
+	- Convert stick diagram into layout but ensure that it does not violate library rules.
   - Characterization
     - Extract parasitics from layout and characterise in terms of time delay
 	
   3. Output
-  - CDL (circuit description lannguage)
+  - CDL (circuit description language)
   - GDSII, LEF, extracted SPICE netlist
   - Timing, noise, power.lib functions
   
 ### Cell Characterization Flow
 
-Here are the typical steps involved in cell characterization,
+Here are the typical steps involved in the cell characterization,
   
   1. Read model files of MOS from foundry
   2. Read extracted SPICE netlist
-  3. Define/ recognise buffer behaviour
+  3. Define/ recognise buffer behavior
   4. Read subcircuits in the design
   5. Connect necessary power supplies
   6. Apply stimulus
@@ -344,7 +348,7 @@ Here are the typical steps involved in cell characterization,
 
 ### Features of OpenLane Flow
 
-In OpenLane flow, if needed, user is able to change certain flow parameters on the fly. The details of parameters which can be varied during the flow are listed in READ_ME.md file in the configuration folder. 
+In OpenLane flow, if needed, user is able to change certain flow parameters on the fly. The details of parameters which can be varied during the flow are listed in READ_ME.md file in the '../configurations' folder. 
 
 Command to check existing value of a parameter,
 
@@ -359,33 +363,34 @@ Command to set a value of a parameter,
 A manufacturing process to get final CMOS involves 16 masks. Steps to manufacture a CMOS are,
   
   1. Select a substrate
-  - substrate doping level should be less that well doping level
+  - Substrate doping level should be less that of well doping level
 	
   2. Create active region for transistor
   
   3. N-well and P-well formation
-  - includes drive-in diffussion and twin tub formation process
+  - Includes drive-in diffussion and twin tub formation process
 	
   4. Formation of Gate
-  - form P implant inside P-well
-  - form N implant inside N-well
-  - deposit polysilicon layer
-  - dope polysilicon layer with N impurities to have a low sheet resistance
-  - remove polysilicon layer in the areas expect gate region
+  - Form P implant inside P-well
+  - Form N implant inside N-well
+  - Deposit polysilicon layer
+  - Dope polysilicon layer with N impurities to have a low sheet resistance
+  - Remove polysilicon layer in the areas expect gate region
 	
   5. Lightly doped drain formation
   - N impurities to form N- implant inside P-well (N- -> indicates light doping)
   - P impurities to form P- implant inside N-well (P- -> indicates light doping)
 	
   6. Source and Drain formation
-  - form N+ implant in P-well to get source and drain
-  - form P+ implant in N-well to get source and drain
+  - Form N+ implant in P-well to get source and drain
+  - Form P+ implant in N-well to get source and drain
 
   7. Form contacts and local interconnects
   
   8. Higher level metal interconnect formation
   
-	Note: As process moves from bottom to top, the thickness of metal interconnects increases.
+	Note:
+	As process moves from bottom to top, the thickness of metal interconnects increases.
 	
 ### SPICE Deck
 
@@ -398,7 +403,7 @@ SPICE deck is a set of commands that includes,
 
 Once the SPICE deck file (.spice extension) is ready, here is the command format to run simulation process,
 	
-	nspice `name_of_the_spice_deck_file`
+	ngspice `name_of_the_spice_deck_file`
 	
 If an example of a CMOS Inverter is considered then CMOS robustness can be defined with SPICE simulation by determinig parameters such as
   - Switching Threshold (Vm)
@@ -406,7 +411,7 @@ If an example of a CMOS Inverter is considered then CMOS robustness can be defin
 
 ### Extract SPICE File from Layout
 
-A custom inverter cell is taken as an example and will be used throughout the flow exercises. Here is an example of how to extract SPICE file from custom inverter cell layout in magic tool. Command to open layout file (.mag file extension) in magic,
+A custom inverter cell is taken as an example and will be used throughout the flow exercises. Here is an example of how to extract SPICE file from custom inverter cell layout in magic tool. Command to open a layout file (.mag extension) in magic tool,
 	
 	magic -T `path_to_tech_file` 'path_to_mag_file` &
 	
@@ -416,7 +421,7 @@ Inverter cell view in magic tool,
 
 ![](/snapshots_lab_session/Day3/D3_lab_magic_inv_view2.JPG)
 
-  - Go to tkcon terminal and enter below commands without quotes
+  - Go to tkcon terminal and enter below commands
   - enter command, 'extract all' (gives .ext file in the same directory)
   - enter command, 'ext2spice cthresh 0 rthesh 0' (this is to extract parasitics)
   - enter command, 'ext2spice' (should give .spice file in the same directory)
@@ -429,7 +434,7 @@ Inverter cell view in magic tool,
 
 ### Example of SPICE Simulation
 
-Here is the example of transient response to characterize the Inverter cell in above-mentioned steps,
+Here is the example of transient response to characterize the custom inverter cell in above-mentioned steps,
 
 Modify the extracted SPICE file so that SPICE deck has,
   - right scaling value
@@ -492,9 +497,9 @@ LEF files contain information necessary for PnR process. There are two types of 
 
 ### Example to Check PnR Tool Requirements
 
-Here is an example to check with the help of guidelines if PnR tool requirements are satisfied by above-mentioned custom inverter cell.
+Here is an example to check if above-mentioned custom inverter cell satisfies the PnR tool requirements,
   
-  - To verify if ports lie on the interconnect layer, track information and layout grid should be converged
+  - Converge track information and layout grid to verify if ports lie on the interconnect layer
   
   The offset value (distance from the origin to the routing track) and the pitch value (centre-to-centre distance between the routing tracks) along x and y direction are defined in the track information file. Typical data format in track info file is,
 	
@@ -510,7 +515,7 @@ Here is an example to check with the help of guidelines if PnR tool requirements
   
   In the above snapshot it can observed that the ports lie on the intersection of horizontal and vertical tracks.
   
-  - To verify if width is in odd multiples of x direction pitch value, count the number of blocks within PRboundary marked in white lines in below image.
+  - Count the number of blocks within PR boundary marked in white lines in below image to verify if cell width is in odd multiples of X direction pitch value.
   
   ![](/snapshots_lab_session/Day4/D4_lab_width_check.JPG)  
   
@@ -522,7 +527,8 @@ Open a custom inverter cell design in magic tool, command format to extract lef 
 	
 	lef write `desired_file_name`
 	
-	Note: If file name is not specified then magic uses same file name as that of the .mag file.
+	Note:
+	If file name is not specified then magic uses same file name as that of the .mag file.
 	
 ![](/snapshots_lab_session/Day4/D4_lab_lef_file_extract.JPG)
 
@@ -538,7 +544,8 @@ Here is an example of modifies 'config.tcl' file,
 
 ![](/snapshots_lab_session/Day4/D4_lab_config_file_modifications.JPG)
 
-	Note: If tagged folder is used for the openlane flow then make sure that overwrite argument is passed in design setup stage. Overwrite argument will overwrite existing data in the runs folder with latest configuaration form config.tcl file.
+	Note:
+	If tagged folder is used for the openlane flow then make sure that overwrite argument is passed in design setup stage. Overwrite argument will overwrite existing data in the runs folder with latest configuaration form config.tcl file.
 	
 Additional commands before the synthesis run,
 
@@ -562,8 +569,7 @@ wns => Worst Negative Slack
 	Difference between data arrival time and data required time is called as slack.
 	In the design, slack values should either be positive or zero.
 	
-
-Details of parameters related to synthesis configuration are listed in READ_ME.md file in '/configurations' folder. The value of these parameters could be changed and its effect could be analysed on the design. For example, strategy for synthesis like time focused or area focused could be set with SYNTH_STRATEGY parameter whereas enabling SYNTH_BUFFERING adds buffers along the path to reduce delay. 
+Details of parameters related to synthesis configuration are listed in READ_ME.md file in '../configurations' folder. The value of these parameters could be changed and its effect could be analysed on the design. For example, strategy for synthesis like time focused or area focused could be set with SYNTH_STRATEGY parameter whereas enabling SYNTH_BUFFERING adds buffers along the path to reduce delay. 
 
 	Note:
 	In IC design, designers should always strike a right balance of time, area and power requirements.
@@ -666,20 +672,20 @@ Now, coming back to OpenLane flow,
 
   - Run CTS Process
 
-Parameters of the CTS (Clock Tree Synthesis) process can be checked in the READ_ME.md file at '.. /configurations' directory. QoR stands for quality of result, lower the value of QoR degraded are the process results but on other hand higher QoR puts more run overhead. Use command,
+Parameters of the CTS (Clock Tree Synthesis) process can be checked in the READ_ME.md file at '.. /configurations' directory. QoR stands for quality of results, lower the value of QoR degraded are the process results but on other hand higher QoR puts more run overhead. Use command,
 
 	run_cts
 	
-In CTS process, clock buffers are added to the design and that results into new netlist. One should see additional netlist file in '../results/synthesis' folder.
+In CTS process, clock buffers are added to the design and that results into a new netlist. Additional netlist file in '../results/synthesis' folder can be noticed.
 This new netlist contains information from previous netlist plus netlist information of clock buffers. And the new .def file created at this step can be checked using magic tool.
 
   - Timing Analysis in OpenLane Flow
 
-OpenSTA tool is integrated into OpenRoad application therefore one can do timing analysis using OpenSTA within OpenLane flow. Open openlane flow and to invoke to openroad, use command,
+OpenSTA tool is integrated into OpenRoad application therefore one can do timing analysis using OpenSTA within OpenLane flow. Open openlane flow and to invoke openroad, use command,
 	
 	openroad
 
-A database needs to be created to run analysis in openraod. Databsse contains information from .lef and .def generated from the cts run. As .lef contains technology related information, it does not change. Whereas .def file changes only when new component or cell is added to the design. Only in such scenarios database has to be recreated.
+A database needs to be created to run analysis in openroad. Databsse contains information from .lef and .def generated from the cts run. As .lef contains technology related information, it does not change. Whereas .def file changes only when new component or cell is added to the design. Only in such cases database should be recreated.
 
 	read_lef `path_to_merged_lef_file`
 	
@@ -709,14 +715,14 @@ The positive slack values can be seen in the displayed results.
 
 In routing, metal layers are interconnected with valid pattern of horizontal and vertical wires. The specifications such as wire width, pitch, thickness are provided by foundry in PDK.
  
-The idea behind routing is to find shortest path between two nodes and there exists several algorithms that do this task in optimal way. Although idea is to find shortest path, the 'L' shaped routing lines should always be preferred than 'Z' or 'Zigzag' shaped lines. OpenLane uses TritonRoute algorithm for routing process. This alogorithm works in two stages,
+The idea behind routing is to find shortest path between two nodes and there are several algorithms that do this task in optimal way. Although idea is to find shortest path, the 'L' shaped routing lines should always be preferred than 'Z' or 'Zigzag' shaped lines. OpenLane uses TritonRoute algorithm for routing process. This algorithm works in two stages,
   
   - Global Routing (Fast route) -> Generates routing guides
   - Detailed Routing -> Uses routing guides from previous global routing stage to generate detailes routing solution with optimized wire length and via count.
   
 ### Generate Power Distribution Network
 
-Although this step should be a part of floorplan process, this particular version of openlane does not support it yet. Therefore, power distribution network is generated after CTS run. Use command,
+Although this step should be a part of floorplan process, this particular version of openlane does not support it. Therefore, power distribution network is generated after CTS run. Use command,
 	
 	gen_pdn
 
@@ -724,11 +730,11 @@ Although this step should be a part of floorplan process, this particular versio
 
 ![](/snapshots_lab_session/Day5/D5_lab_gen_pdn_output.JPG)
 
-The pitch information of metal 1 layer in the pdn output indicates the distance between power and ground carrier traces or lines. Therefore, custom cell inverter in the example should have height in the odd multiples of pitch.
+The pitch information of metal 1 layer in the pdn output indicates the distance between power and ground carrier traces or lines. Therefore, custom cell inverter taken as an example should have height in the odd multiples of pitch.
 
 ### Run Routing 
 
-Parameters to set routing process are defined in READ_ME.md file in the './configuration' folder. For example, if ROUTING_STRATEGY is set to 0 then routing results may not converge and have DRC violations but it takes less time and is less overhead for the syste. Whereas if strategy is set to 14 then TritonRoute 14 engine is used in the backend which takes a lot of time but converges with 0 DRC erros.
+Parameters to set routing process are defined in READ_ME.md file in the './configuration' folder. For example, if ROUTING_STRATEGY is set to 0 then routing results may not converge and have DRC violations but it takes less time and is less overhead for the system. Whereas if strategy is set to 14 then TritonRoute 14 engine is used in the backend which takes a lot of time but converges with 0 DRC erros.
 
 Use command,
 	
@@ -740,7 +746,7 @@ The .def file generated at this stage will have information from def file from c
 
 ### SPEF Extractor
 
-SPEF stands for Standard Parasitics Exchange Format. Each and every wire on the layout has some finite resistance and capacitance associated with it which affects timing characteristics of the design. These values are extraced and used in the urther process to get timing models.
+SPEF stands for Standard Parasitics Exchange Format. Each and every wire on the layout has some finite resistance and capacitance associated with it which affects timing characteristics of the design. These values are extraced and used in further processes to get timing models.
 
 SPEF extractor is not included in this openlane version. Extractor is based on a python engine and requires information in .lef file and .def file from routing stage for the extraction process. Here is an example,
 
@@ -750,12 +756,12 @@ Extractor outputs .spec file and is placed in the same directory as of .def file
 
 ### Steps for Post Route STA Analysis
 
-Post route STA analysis is the fina verification step before design sign off. The steps mentioned in earlier STA analysis will followed here with minor changes. For example,
+Post route STA analysis is the final verification step before design sign off. The steps mentioned in earlier STA analysis will followed here with minor changes. For example,
 
-  - Creat new databse file
+  - Create new databse file
     - read .lef file
-	- read .def file updated durring the routing process
-  - Read verilog file generated during the process
+	- read .def file updated during routing process
+  - Read verilog file generated during routing process
     - As routing stage includes fake antenna diodes in the design, use file that has 'preroute' in its name.
   - Link the design
   - Read the same custom .sdc file
