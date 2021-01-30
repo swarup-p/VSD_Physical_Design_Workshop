@@ -4,6 +4,7 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
+
   ![](/snapshots_lab_session/Advanced-Physical-Design-using-OpenLANE_Sky130_1.JPG)
 
   <h3 align="center">Advanced Physical Design</h3>
@@ -60,6 +61,7 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
       <ul>
         <li><a href="#pnr-and-lef-files">PnR and LEF Files</a></li>
 		<li><a href="#cell-lef-file-extraction">Cell LEF File Extraction</a></li>
+		<li><a href="#example-to-check-pnr-tool-reqiremnts">Example to Check PnR Tool Requirements</a></li>
 		<li><a href="#plug-custom-cell-into-existing-design">Plug Custom Cell into Existing Design</a></li>
       </ul>
     </li>
@@ -113,7 +115,7 @@ Here are the basic steps invoved in the process to realize functional ASIC,
   10. Sign Off: 
   Routed layers undergo physical verification known as signoff checks to avoid any errors just before tapeout.
 	
-Please refer to link below to understand complete ASIC flow,
+Please refer to link to understand complete ASIC flow,
 	https://www.einfochips.com/blog/asic-design-flow-in-vlsi-engineering-services-a-quick-guide/
 
 <!-- Google-Skywater's PDK and OpenLANE -->
@@ -123,7 +125,7 @@ Please refer to link below to understand complete ASIC flow,
 
 Google and Skywater Technology Foundry have partnered to release first ever manufacturable open source 130nm process design kit(pdk). PDK is a collection of files that includes process design rules, behavioral models, analog designs, digital designs, support IPs and extracted data. PDK is in an interface between VLSI engineers and foundry. This particular PDK uses "SKY130" (130 nm) process node which supports 1 level of local interconnect and 5 levels of metals, and is capable of having inductors, has high sheet rho poly resistors, optional MiM capacitors and also includes SONOS shrunken cell.
 
-Please refer to video link below,
+Please refer to video link,
 	https://www.youtube.com/watch?v=EczW2IWdnOM&feature=youtu.be
 
 ### OpenLANE
@@ -472,11 +474,13 @@ Place and Route (PnR) is an automated process and does not need any circuit info
   
 LEF files contain information necessary for PnR process. There are two types of LEF files, one is 'tech lef', which includes layer information, DRC rules, via information and the other is 'cell lef' which contains abstract information of standard cells. As LEF files does not contain any logic design information, they protect design IP. 
 
+### Example to Check PnR Tool Requirements
+
 Here is an example to check with the help of guidelines if PnR tool requirements are satisfied by above-mentioned custom inverter cell.
   
   - To verify if ports lie on the interconnect layer, track information and layout grid should be converged
   
-  Tracks are centered at the origin. The offset value (distance from the origin to the routing track) and the pitch value (centre-to-centre distance between the routing tracks) along x and y direction are defined in the track information file. Typical data format in track info file is,
+  The offset value (distance from the origin to the routing track) and the pitch value (centre-to-centre distance between the routing tracks) along x and y direction are defined in the track information file. Typical data format in track info file is,
 	
 	Layer Direction Offset Pitch
   
@@ -490,7 +494,7 @@ Here is an example to check with the help of guidelines if PnR tool requirements
   
   In the above snapshot it can observed that the ports lie on the intersection of horizontal and vertical tracks.
   
-  - To verify if width is in odd multiples of x direction pitch value, count the number of blocks within PRboundary marked in white lines.
+  - To verify if width is in odd multiples of x direction pitch value, count the number of blocks within PRboundary marked in white lines in below image.
   
   ![](/snapshots_lab_session/Day4/D4_lab_width_check.JPG)  
   
@@ -520,11 +524,11 @@ Here is an example of modifies 'config.tcl' file,
 
 	Note: If tagged folder is used for the openlane flow then make sure that overwrite argument is passed in design setup stage. Overwrite argument will overwrite existing data in the runs folder with latest configuaration form config.tcl file.
 	
-Additional commands before synthesis run,
+Additional commands before the synthesis run,
 
 ![](/snapshots_lab_session/Day4/D4_lab_commands_before_run_synthesis.JPG)
 
-Synthesis logs to verify that the custom cell is added to the design.
+Check synthesis logs to verify that the custom cell is added to the design.
 
 ![](/snapshots_lab_session/Day4/D4_lab_custom_cell_addition_to_synthesis.JPG)
 
