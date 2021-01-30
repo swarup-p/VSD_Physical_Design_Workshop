@@ -1,9 +1,9 @@
 # VSD_Physical_Design_Workshop
-Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open source) and Sky130 PDKs by Google and Skywater (open source).
+
+Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open source) and Sky130 PDK by Google and Skywater (open source).
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-
   ![](/snapshots_lab_session/Advanced-Physical-Design-using-OpenLANE_Sky130_1.JPG)
 
   <h3 align="center">Advanced Physical Design</h3>
@@ -53,6 +53,14 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#spice-deck">SPICE Deck</a></li>
 		<li><a href="#extract-spice-file-from-layout">Extract SPICE File from Layout</a></li>
 		<li><a href="#example-of-spice-simulation">Example of SPICE Simulation</a></li>
+      </ul>
+    </li>
+	<li>
+      <a href="#day-4-pnr-and-timing-analysis">Day 4 PnR and Timing Analysis</a>
+      <ul>
+        <li><a href="#pnr-and-lef-files">PnR and LEF Files</a></li>
+		<li><a href="#cell-lef-file-extraction">Cell LEF File Extraction</a></li>
+		<li><a href="#plug-custom-cell-into-existing-design">Plug Custom Cell into Existing Design</a></li>
       </ul>
     </li>
 	<li><a href="#references">References</a></li>
@@ -380,7 +388,7 @@ If an example of a CMOS Inverter is considered then CMOS robustness can be defin
 
 ### Extract SPICE File from Layout
 
-Here is an example of how to extract SPICE file from Inverter layout in magic tool. Command to open layout file (.mag file extension) in magic,
+Here is an example of how to extract SPICE file from custom inverter cell layout in magic tool. Command to open layout file (.mag file extension) in magic,
 	
 	magic -T `path_to_tech_file` 'path_to_mag_file` &
 	
@@ -452,6 +460,73 @@ Propagation dealay when output is falling: 0.00412 nsec
 
 ![](/snapshots_lab_session/Day3/D3_lab_inv_propagation_out_fall.JPG)
 
+<!-- Day 4 PnR and Timing Analysis -->
+## Day 4 PnR and Timing Analysis
+
+### PnR and LEF Files
+
+Place and Route (PnR) is an automated process and does not need any circuit information other than input, output, PRboundary, power rail and ground rail. Tracks are used in the route process and some of the basic guidelines to follow in route process are,
+  - Input and output port should lie on the intersection of vertical and horizontal tracks on the inteconnect layer
+  - Width of the standard cell should be in odd multiples of horizontal track pitch
+  - Height of the standard cell should be in odd multiples of vertical track pitch
+  
+LEF files contain information necessary for PnR process. There are two types of LEF files, one is 'tech lef', which includes layer information, DRC rules, via information and the other is 'cell lef' which contains abstract information of standard cells. As LEF files does not contain any logic design information, they protect design IP. 
+
+Here is an example to check with the help of guidelines if PnR tool requirements are satisfied by above-mentioned custom inverter cell.
+  
+  - To verify if ports lie on the interconnect layer, track information and layout grid should be converged
+  
+  Tracks are centered at the origin. The offset value (distance from the origin to the routing track) and the pitch value (centre-to-centre distance between the routing tracks) along x and y direction are defined in the track information file. Typical data format in track info file is,
+	
+	Layer Direction Offset Pitch
+  
+  ![](/snapshots_lab_session/Day4/D4_lab_track_info_file.JPG)
+  
+  command to converge grid and track information,
+	
+	grid [Xspacing[Yspacing[Xorigin Yorigin]]]
+	
+  ![](/snapshots_lab_session/Day4/D4_lab_li1_intersection_check.JPG)
+  
+  In the above snapshot it can observed that the ports lie on the intersection of horizontal and vertical tracks.
+  
+  - To verify if width is in odd multiples of x direction pitch value, count the number of blocks within PRboundary marked in white lines.
+  
+  ![](/snapshots_lab_session/Day4/D4_lab_width_check.JPG)  
+  
+  - In the same way, guideline for the cell height can also be verified.
+  
+### Cell LEF File Extraction
+
+Open a custom inverter cell design in magic tool, command format to extract lef is,
+	
+	lef write `desired_file_name`
+	
+	Note: If file name is not specified then magic uses same file name as that of the .mag file.
+	
+![](/snapshots_lab_session/Day4/D4_lab_lef_file_extract.JPG)
+
+![](/snapshots_lab_session/Day4/D4_lab_lef_file_extract1.JPG)
+
+### Plug Custom Cell into Existing Design
+
+In order to include custom cell design into an existing design, 'config.tcl' of the existing design should be modified to include,
+  - libraries that contain custom cell information
+  - extracted lef file of the custom cell
+  
+Here is an example of modifies 'config.tcl' file,
+
+![](/snapshots_lab_session/Day4/D4_lab_config_file_modifications.JPG)
+
+	Note: If tagged folder is used for the openlane flow then make sure that overwrite argument is passed in design setup stage. Overwrite argument will overwrite existing data in the runs folder with latest configuaration form config.tcl file.
+	
+Additional commands before synthesis run,
+
+![](/snapshots_lab_session/Day4/D4_lab_commands_before_run_synthesis.JPG)
+
+Synthesis logs to verify that the custom cell is added to the design.
+
+![](/snapshots_lab_session/Day4/D4_lab_custom_cell_addition_to_synthesis.JPG)
 
 
 <!-- References --> 
