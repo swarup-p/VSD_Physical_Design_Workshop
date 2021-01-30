@@ -63,6 +63,9 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#cell-lef-file-extraction">Cell LEF File Extraction</a></li>
 		<li><a href="#example-to-check-pnr-tool-reqiremnts">Example to Check PnR Tool Requirements</a></li>
 		<li><a href="#plug-custom-cell-into-existing-design">Plug Custom Cell into Existing Design</a></li>
+		<li><a href="#fix-slack-violations-(pre-synthesis)">Fix Slack Violations (Pre-Synthesis)</a></li>
+		<li><a href="#fix-slack-violations-(post-synthesis)">Fix Slack Violations (Post-Synthesis)</a></li>
+		<li><a href="#cts-timing-analysis">CTS Timing Analysis</a></li>
       </ul>
     </li>
 	<li><a href="#references">References</a></li>
@@ -390,7 +393,7 @@ If an example of a CMOS Inverter is considered then CMOS robustness can be defin
 
 ### Extract SPICE File from Layout
 
-Here is an example of how to extract SPICE file from custom inverter cell layout in magic tool. Command to open layout file (.mag file extension) in magic,
+A custom inverter cell is taken as an example and will be used throughout the flow exercises. Here is an example of how to extract SPICE file from custom inverter cell layout in magic tool. Command to open layout file (.mag file extension) in magic,
 	
 	magic -T `path_to_tech_file` 'path_to_mag_file` &
 	
@@ -467,7 +470,7 @@ Propagation dealay when output is falling: 0.00412 nsec
 
 ### PnR and LEF Files
 
-Place and Route (PnR) is an automated process and does not need any circuit information other than input, output, PRboundary, power rail and ground rail. Tracks are used in the route process and some of the basic guidelines to follow in route process are,
+Place and Route (PnR) is an automated but an iterative process. It does not need any circuit information other than input, output, PRboundary, power rail and ground rail. Tracks are used in the route process and some of the basic guidelines to follow in route process are,
   - Input and output port should lie on the intersection of vertical and horizontal tracks on the inteconnect layer
   - Width of the standard cell should be in odd multiples of horizontal track pitch
   - Height of the standard cell should be in odd multiples of vertical track pitch
@@ -531,6 +534,161 @@ Additional commands before the synthesis run,
 Check synthesis logs to verify that the custom cell is added to the design.
 
 ![](/snapshots_lab_session/Day4/D4_lab_custom_cell_addition_to_synthesis.JPG)
+
+Although cell is added to the design negative slack values are reported after the successful synthesis run.
+
+![](/snapshots_lab_session/Day4/D4_lab_slack_values_after_synthesis.JPG)
+
+tns => Total Negative Slack (addition of all negative slacks)
+wns => Worst Negative Slack
+
+### Fix Slack Violations (Pre-Synthesis)
+
+	Note:
+	
+	Difference between data arrival time and data required time is called as slack.
+	In the design, slack values should either be positive or zero.
+	
+
+Details of parameters related to synthesis configuration are listed in READ_ME.md file in '/configurations' folder. The value of these parameters could be changed and its effect could be analysed on the design. For example, strategy for synthesis like time focused or area focused could be set with SYNTH_STRATEGY parameter whereas enabling SYNTH_BUFFERING adds buffers along the path to reduce delay. 
+
+	Note:
+
+	In IC design, designers should always strike a right balance of time, area and power requirements. For example, addition of buffers do reduce time delay but that is at the cost of area on the chip.
+	
+- Set synthesis configuration
+- Run synthesis process again
+
+Slack values were improved by changing the synthesis configuration,
+
+![](/snapshots_lab_session/Day4/D4_lab_slack_reduction_step1.JPG)
+![](/snapshots_lab_session/Day4/D4_lab_slack_reduction_step1_note.JPG)
+
+- run floorplan process
+- run placement process
+
+Verify that custom cell is included in the PnR flow using magic tool.
+
+### Fix Slack Violations (Post-Synthesis)
+
+For post-synthesis analysis, OpenSTA tool can be used. OpenSTA is an external tool and runs outside the OpenLane flow which means STA (Static Timing Analysis) tool does not have access to configuration parameters in OpenLane flow. Therefore, in order to run STA with OpenSTA,
+
+  - Create a .sdc file which includes OpenLane flow parameters and necessary additional parameters (Defaults settings used by OpenLane can be found in ../openlane/scripts/base.sdc)
+  - Create a .conf file to configure analysis with OpenSTA
+  - Refer / add .sdc file from first step into .conf file
+  - In addition to that, .conf file should have,
+    - path of netlist file 
+    - link to design
+    - path of libraries	
+
+Example of a .conf file,
+
+![](/snapshots_lab_session/Day4/D4_lab_presta_conf_modifications.JPG)
+
+to run STA use command format,
+
+	sta `config_file_name`
+	
+![](/snapshots_lab_session/Day4/D4_lab_invoke_sta.JPG)
+
+	Note:
+	
+	At this point, slack values should be same as the values obtained at the end of pre-synthesis timing analysis process because same netlist file is used here.
+	
+Statistic displayed on the screen shows that delay is high for the huge fanout nets (fanout value of 6 or more). Also, higher delay value is observed when input slew is high or output capacitance is high.
+
+Exit OpenSTA tool.
+
+  - How to Change fanout of Nets
+  
+  In the OpenLane, synthesis process gives an option to set maximum fanout. For parameter details, check READ_ME.md in '/configurations' folder.
+  
+  - Go back to OpenLane flow
+  - Change SYNTH_MAX_FANOUT parameter value, for example, here it is set to 4.
+  - Run sysnthesis step again because the only netlist will be updated with changes of the fanout parameter.
+  - On successful run, exit flow and go back to OpenSTA tool.
+
+Re-run .conf file through STA tool because netlist is updated with new fanout condition.
+
+![](/snapshots_lab_session/Day4/D4_lab_high_fan_out_net_example.JPG)
+
+High input slew can be observed on the buffers in the design, for example, sky130_fd_sc_hd__buf_1. 
+
+  - How to Replace Cell in STA
+  
+OpenSTA allows user to check connections of particular net, and to replace particular cell in the design and observe its effects.
+
+![](/snapshots_lab_session/Day4/D4_lab_net_conn_in_sta.JPG)
+
+Upsizing buffer is one of the option to improve timings in the design but also remember that high strength buffers occupy more area on the chip. 
+
+![](/snapshots_lab_session/Day4/D4_lab_replace_cell_in_sta.JPG)
+
+Results after buffer cell is replaced with higher strengh buffer from the library,
+
+![](/snapshots_lab_session/Day4/D4_lab_results_after_replace_cell.JPG)
+
+These steps can be repeated multiple times to get improved slack values but keep in mind the downfalls as well.
+
+  - Netlist from OpenSTA
+  
+Replacing cell changes the netlist of the design. OpenSTA allows to write this netlist into a file. In OpenSTA tool use command format,
+
+	write_verilog `path_to_synthesis_file_in_flow`
+	
+![](/snapshots_lab_session/Day4/D4_lab_improved_slack_netlist_to_openlane_flow.JPG)
+
+One can easily verify if netlist is overwritten,
+
+  - open netlist file, ' less netlist_file_name'
+  - search for the replacement cell name in the file
+  - if it is there, netlist is successfully written.
+  
+Now, coming back to OpenLane flow,
+
+  - run floorplan
+  - run placement
+    - one may notice number of iterations to converge the design are more and core has increased because bigger bufferes are used.
+	
+### CTS Timing Analysis
+
+  - Run CTS Process
+
+Parameters of the CTS (Clock Tree Synthesis) process can be checked in the READ_ME.md file at '.. /configurations' directory. QoR stands for quality of result, lower the value of QoR degraded are the process results but on other hand higher QoR puts more run overhead. Use command,
+
+	run_cts
+	
+In CTS process, clock buffers are added to the design and that results into new netlist. One should see additional netlist file in '../results/synthesis' folder.
+This new netlist contains information from previous netlist plus netlist information of clock buffers. And the new .def file created at this step can be checked using magic tool.
+
+  - Timing Analysis in OpenLane Flow
+
+OpenSTA tool is integrated into OpenRoad application therefore one can do timing analysis using OpenSTA within OpenLane flow. Open openlane flow and to invoke to openroad, use command,
+	
+	openroad
+
+A database needs to be created to run analysis in openraod. Databsse contains information from .lef and .def generated from the cts run. As .lef contains technology related information, it does not change. Whereas .def file changes only when new component or cell is added to the design. Only in such scenarios database has to be recreated.
+
+	read_lef `path_to_merged_lef_file`
+	
+	read_def `path_to_cts_def_file`
+	
+	write_db `custom_db_name`
+	
+Once, database is created, here are the setup steps for timing analysis,
+
+  - read_db `db_file_name`
+  - read_verilog `netlist_file_after_cts_run`
+  - read_liberty `path_to_typical_cell_library`
+  - link design
+  - read_sdc `path_to_custom_sdc_file`
+  - enter analysis command
+  
+![](/snapshots_lab_session/Day4/D4_lab_openroa_with_typical_lib1.JPG)
+
+![](/snapshots_lab_session/Day4/D4_lab_cal_set_delay_in_openroad.JPG)
+
+The positive slack values can be seen the displayed statistics.
 
 
 <!-- References --> 
