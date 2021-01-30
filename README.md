@@ -68,7 +68,20 @@ Workshop covers full RTL to GDSII flow using OpenLANE tool by efabless (open sou
 		<li><a href="#cts-timing-analysis">CTS Timing Analysis</a></li>
       </ul>
     </li>
+	<li>
+      <a href="#day-5-routing-and-spef-extractor">Day 5 Routing and SPEF Extractor</a>
+      <ul>
+        <li><a href="#Routing">Routing</a></li>
+		<li><a href="#cell-lef-file-extraction">Cell LEF File Extraction</a></li>
+		<li><a href="#generate-power-distribution-network">Generate Power Distribution Network</a></li>
+		<li><a href="#run-routing">Run Routing</a></li>
+		<li><a href="#spef-extractor">SPEF Extractor</a></li>
+		<li><a href="#steps-for-post-route-sta-analysis">Steps for Post Route STA Analysis</a></li>
+      </ul>
+    </li>
 	<li><a href="#references">References</a></li>
+	<li><a href="#acknowledgement">Acknowledgement</a></li>
+	<li><a href="#contact-information">Contact Information</a></li>
   </ol>
 </details>
 
@@ -540,12 +553,12 @@ Although cell is added to the design negative slack values are reported after th
 ![](/snapshots_lab_session/Day4/D4_lab_slack_values_after_synthesis.JPG)
 
 tns => Total Negative Slack (addition of all negative slacks)
+
 wns => Worst Negative Slack
 
 ### Fix Slack Violations (Pre-Synthesis)
 
 	Note:
-	
 	Difference between data arrival time and data required time is called as slack.
 	In the design, slack values should either be positive or zero.
 	
@@ -553,8 +566,8 @@ wns => Worst Negative Slack
 Details of parameters related to synthesis configuration are listed in READ_ME.md file in '/configurations' folder. The value of these parameters could be changed and its effect could be analysed on the design. For example, strategy for synthesis like time focused or area focused could be set with SYNTH_STRATEGY parameter whereas enabling SYNTH_BUFFERING adds buffers along the path to reduce delay. 
 
 	Note:
-
-	In IC design, designers should always strike a right balance of time, area and power requirements. For example, addition of buffers do reduce time delay but that is at the cost of area on the chip.
+	In IC design, designers should always strike a right balance of time, area and power requirements.
+	For example, addition of buffers do reduce time delay but that is at the cost of area on the chip.
 	
 - Set synthesis configuration
 - Run synthesis process again
@@ -592,10 +605,9 @@ to run STA use command format,
 ![](/snapshots_lab_session/Day4/D4_lab_invoke_sta.JPG)
 
 	Note:
-	
 	At this point, slack values should be same as the values obtained at the end of pre-synthesis timing analysis process because same netlist file is used here.
 	
-Statistic displayed on the screen shows that delay is high for the huge fanout nets (fanout value of 6 or more). Also, higher delay value is observed when input slew is high or output capacitance is high.
+Results displayed on the screen shows that delay is high for the huge fanout nets (fanout value of 6 or more). Also, higher delay value is observed when input slew is high or output capacitance is high.
 
 Exit OpenSTA tool.
 
@@ -688,7 +700,67 @@ Once, database is created, here are the setup steps for timing analysis,
 
 ![](/snapshots_lab_session/Day4/D4_lab_cal_set_delay_in_openroad.JPG)
 
-The positive slack values can be seen the displayed statistics.
+The positive slack values can be seen in the displayed results.
+
+<!-- Day 5 Routing and SPEF Extractor -->
+## Day 5 Routing and SPEF Extractor
+
+### Routing
+
+In routing, metal layers are interconnected with valid pattern of horizontal and vertical wires. The specifications such as wire width, pitch, thickness are provided by foundry in PDK.
+ 
+The idea behind routing is to find shortest path between two nodes and there exists several algorithms that do this task in optimal way. Although idea is to find shortest path, the 'L' shaped routing lines should always be preferred than 'Z' or 'Zigzag' shaped lines. OpenLane uses TritonRoute algorithm for routing process. This alogorithm works in two stages,
+  
+  - Global Routing (Fast route) -> Generates routing guides
+  - Detailed Routing -> Uses routing guides from previous global routing stage to generate detailes routing solution with optimized wire length and via count.
+  
+### Generate Power Distribution Network
+
+Although this step should be a part of floorplan process, this particular version of openlane does not support it yet. Therefore, power distribution network is generated after CTS run. Use command,
+	
+	gen_pdn
+
+![](/snapshots_lab_session/Day5/D5_lab_command_gen_pdn.JPG)
+
+![](/snapshots_lab_session/Day5/D5_lab_gen_pdn_output.JPG)
+
+The pitch information of metal 1 layer in the pdn output indicates the distance between power and ground carrier traces or lines. Therefore, custom cell inverter in the example should have height in the odd multiples of pitch.
+
+### Run Routing 
+
+Parameters to set routing process are defined in READ_ME.md file in the './configuration' folder. For example, if ROUTING_STRATEGY is set to 0 then routing results may not converge and have DRC violations but it takes less time and is less overhead for the syste. Whereas if strategy is set to 14 then TritonRoute 14 engine is used in the backend which takes a lot of time but converges with 0 DRC erros.
+
+Use command,
+	
+	run_routing
+
+![](/snapshots_lab_session/Day5/D5_lab_command_run_routing.JPG)
+
+The .def file generated at this stage will have information from def file from cts step and additional pdn information from this stage.
+
+### SPEF Extractor
+
+SPEF stands for Standard Parasitics Exchange Format. Each and every wire on the layout has some finite resistance and capacitance associated with it which affects timing characteristics of the design. These values are extraced and used in the urther process to get timing models.
+
+SPEF extractor is not included in this openlane version. Extractor is based on a python engine and requires information in .lef file and .def file from routing stage for the extraction process. Here is an example,
+
+![](/snapshots_lab_session/Day5/D5_lab_SPEF_extraction1.JPG)
+
+Extractor outputs .spec file and is placed in the same directory as of .def file.
+
+### Steps for Post Route STA Analysis
+
+Post route STA analysis is the fina verification step before design sign off. The steps mentioned in earlier STA analysis will followed here with minor changes. For example,
+
+  - Creat new databse file
+    - read .lef file
+	- read .def file updated durring the routing process
+  - Read verilog file generated during the process
+    - As routing stage includes fake antenna diodes in the design, use file that has 'preroute' in its name.
+  - Link the design
+  - Read the same custom .sdc file
+  - Read extracted parasitics from .spef file, use command,
+    - read_spef `spef_file_name`
 
 
 <!-- References --> 
@@ -703,3 +775,15 @@ The positive slack values can be seen the displayed statistics.
 	
 	5. OpenLane Installation: https://github.com/nickson-jose/openlane_build_script
 	
+<!-- Acknowledgement -->
+## Acknowledgement
+
+* [Kunal Ghosh - Co-founder (VSD Corp. Pvt. Ltd)](https://github.com/kunalg123)
+* [Nickson Jose - VSD VLSI Engineer](https://github.com/nickson-jose)
+* [Praharsha - VSD TA]
+* [Akurathi Radhika - VSD TA]
+
+<!-- Contact Information -->
+## Contact Information
+
+* [Swarup Pulujkar](https://github.com/swarup-p)
